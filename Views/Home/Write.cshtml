@@ -1,0 +1,276 @@
+﻿﻿@{
+ViewData["Title"] = "Write";
+Layout = null; /* Bu sayfada sol menü YOK, temiz bir sayfa */
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novus - Write</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            margin: 0;
+            background-color: white;
+            color: #242424;
+        }
+
+        /* --- ÜST HEADER (MENÜSÜZ) --- */
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #000;
+            text-decoration: none;
+            font-family: serif; /* Medium logosu gibi serif */
+        }
+
+        .draft-status {
+            font-size: 13px;
+            color: #757575;
+            margin-top: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-publish {
+            background-color: #1a8917; /* Medium Yeşili */
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            opacity: 0.5; /* Henüz yazı yazılmadıysa soluk */
+            transition: opacity 0.2s;
+        }
+
+            .btn-publish:hover {
+                opacity: 1;
+            }
+
+        .icon-btn {
+            font-size: 18px;
+            color: #757575;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* --- EDİTÖR ALANI --- */
+        .editor-container {
+            max-width: 740px;
+            margin: 60px auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        /* Başlık Alanı */
+        .input-title {
+            font-family: "Charter", "Bitstream Charter", "Sitka Text", Cambria, serif; /* Serif font */
+            font-size: 42px;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: #242424;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+            .input-title::placeholder {
+                color: #b3b3b1;
+                font-style: italic;
+                opacity: 1;
+            }
+
+        /* Hikaye Alanı */
+        .input-story {
+            font-family: "Charter", "Bitstream Charter", "Sitka Text", Cambria, serif;
+            font-size: 21px;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: #242424;
+            min-height: 300px;
+            line-height: 1.58;
+        }
+
+            .input-story::placeholder {
+                color: #b3b3b1;
+                font-style: italic;
+            }
+
+        /* Artı Butonu (Solda çıkan) */
+        .add-button-wrapper {
+            position: absolute;
+            left: -50px;
+            top: 105px; /* Tell your story hizası */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-circle-plus {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid #757575;
+            background: white;
+            color: #757575;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 300;
+        }
+
+        /* --- ALT FORMATLAMA TOOLBAR (Görseldeki Siyah Kutu) --- */
+        .formatting-help-container {
+            text-align: center;
+            margin-top: 100px;
+            margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            color: #757575;
+            font-size: 14px;
+        }
+
+        .toolbar-box {
+            background-color: #242424;
+            padding: 8px 16px;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+            /* Toolbar Ok İşareti (Aşağı bakan) */
+            .toolbar-box::after {
+                content: '';
+                position: absolute;
+                bottom: -6px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-top: 6px solid #242424;
+            }
+
+        .tool-icon {
+            color: white;
+            font-family: serif;
+            font-size: 18px;
+            cursor: pointer;
+            font-style: italic;
+        }
+
+        .tool-icon-bold {
+            font-weight: bold;
+            font-style: normal;
+            font-family: sans-serif;
+        }
+
+        .tool-icon-header1 {
+            font-size: 20px;
+            font-weight: bold;
+            font-family: serif;
+        }
+
+        .tool-icon-header2 {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: serif;
+        }
+
+        /* Seçili metin vurgusu (Mavi) */
+        .highlight-text {
+            background-color: #cceeff; /* Hafif mavi seçim rengi */
+            padding: 2px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="editor-header">
+        <div class="logo-area">
+            <a asp-controller="Home" asp-action="Index" class="logo">Novus</a>
+            <span class="draft-status">Draft in ZeynepSelimeKartal</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn-publish">Publish</button>
+            <span class="icon-btn">•••</span>
+            <span class="icon-btn">🔔</span>
+            <div class="user-avatar">ZS</div>
+        </div>
+    </header>
+
+    <div class="editor-container">
+
+        <input type="text" class="input-title" placeholder="Title">
+
+        <div class="add-button-wrapper">
+            <div class="btn-circle-plus">+</div>
+        </div>
+
+        <textarea class="input-story" placeholder="Tell your story..."></textarea>
+    </div>
+
+    <div class="formatting-help-container">
+
+        <p>Select text to change formatting, add headers, or create links.</p>
+
+        <div class="toolbar-box">
+            <span class="tool-icon tool-icon-bold">B</span>
+            <span class="tool-icon">i</span>
+            <span class="tool-icon" style="font-style:normal; font-family:sans-serif;">🔗</span>
+            <span class="tool-icon tool-icon-header1">T</span>
+            <span class="tool-icon tool-icon-header2">T</span>
+            <span class="tool-icon" style="font-style:normal;">“</span>
+            <span style="width:1px; height:16px; background:#555;"></span> <span class="tool-icon" style="font-size:14px; font-style:normal;">🔒</span>
+        </div>
+
+        <div style="margin-top: 10px; font-family: serif; font-size: 24px;">
+            <span class="highlight-text">Writing on Novus</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,367 @@
+﻿@{
+    ViewData["Title"] = "Stats";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novus - Stats</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            margin: 0;
+            background-color: white;
+            color: #242424;
+        }
+
+        :root {
+            --ocean-blue: #0D8ABC;
+            --medium-green: #1a8917;
+        }
+
+        .container-fluid {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- 1. SOL MENÜ (Standart) --- */
+        .sidebar-left {
+            width: 280px;
+            padding: 24px;
+            border-right: 1px solid #f2f2f2;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            /* gap: 15px; <- İkon silindiği için boşluk gereksiz */
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 15px;
+            color: #757575;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+            .menu-item.active {
+                color: #000 !important;
+                font-weight: 600;
+            }
+
+            .menu-item:hover {
+                color: #000;
+            }
+
+        .menu-icon {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .menu-group {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #f2f2f2;
+        }
+
+        .menu-group-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #242424;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .write-btn {
+            color: var(--medium-green) !important;
+            font-weight: 500;
+        }
+
+        /* --- 2. STATS İÇERİK ALANI --- */
+        .content-area {
+            flex-grow: 1;
+            padding: 50px 80px;
+            max-width: 1000px;
+        }
+
+        .stats-header-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0 0 30px 0;
+            letter-spacing: -1px;
+        }
+
+        /* Sekmeler */
+        .stats-tabs {
+            display: flex;
+            gap: 30px;
+            border-bottom: 1px solid #f2f2f2;
+            margin-bottom: 40px;
+        }
+
+        .s-tab {
+            padding-bottom: 15px;
+            font-size: 14px;
+            color: #757575;
+            cursor: pointer;
+            position: relative;
+        }
+
+            .s-tab.active {
+                color: #242424;
+                font-weight: 500;
+            }
+
+                .s-tab.active::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 1px;
+                    background: #242424;
+                }
+
+        /* Monthly Bölümü */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .date-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #242424;
+        }
+
+        .date-info {
+            font-size: 13px;
+            color: #757575;
+            margin-bottom: 30px;
+        }
+
+        /* Büyük İstatistik Sayıları */
+        .stats-grid {
+            display: flex;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #242424;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #757575;
+            margin-top: 5px;
+        }
+
+        /* Grafik Alanı (Chart Placeholder) */
+        .chart-container {
+            height: 200px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding-bottom: 0;
+            margin-bottom: 10px;
+        }
+
+        .chart-bar {
+            width: 1px;
+            height: 100%;
+            background-color: #f2f2f2;
+        }
+
+        .chart-dates {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #757575;
+            margin-bottom: 60px;
+        }
+
+        /* Alt Kısım (Lifetime) */
+        .table-header {
+            display: flex;
+            border-bottom: 1px solid #f2f2f2;
+            padding-bottom: 15px;
+            margin-top: 40px;
+            font-size: 13px;
+            color: #757575;
+        }
+
+        .col-story {
+            flex: 4;
+        }
+
+        .col-stat {
+            flex: 1;
+            text-align: right;
+        }
+
+        .empty-state-container {
+            padding: 40px 0;
+            text-align: center;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #242424;
+        }
+
+        .btn-black {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <nav class="sidebar-left">
+            <div class="logo-container">
+                <a asp-controller="Home" asp-action="Index" class="logo">NOVUS</a>
+            </div>
+
+            <a asp-controller="Home" asp-action="Index" class="menu-item"><span class="menu-icon">🏠</span> Home</a>
+            <a asp-controller="Home" asp-action="Library" class="menu-item"><span class="menu-icon">📚</span> Library</a>
+            <a asp-controller="Home" asp-action="Profile" class="menu-item"><span class="menu-icon">👤</span> Profile</a>
+
+            <div class="menu-group">
+                <a asp-controller="Home" asp-action="Stories" class="menu-item"><span class="menu-icon">📝</span> Stories</a>
+                <a asp-controller="Home" asp-action="Stats" class="menu-item active"><span class="menu-icon">📊</span> Stats</a>
+                <a asp-controller="Home" asp-action="Write" class="menu-item write-btn">
+                    <span class="menu-icon">✍️</span> Write
+                </a>
+            </div>
+            <div class="menu-group">
+                <div class="menu-group-title">FOLLOWERS</div>
+                <a href="/Home/Channels" class="menu-item">
+                    <span class="menu-icon">🔔</span> Channels
+                </a>
+            </div>
+        </nav>
+
+        <div class="content-area">
+
+            <h1 class="stats-header-title">Stats</h1>
+
+            <div class="stats-tabs">
+                <div class="s-tab active">Stories</div>
+                <div class="s-tab">Audience</div>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title">Monthly</h2>
+                <button class="date-btn">December 2025 ⌄</button>
+            </div>
+            <div class="date-info">December 1, 2025 – Today (UTC) · Updated hourly</div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Presentations ⓘ</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Views</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Reads</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Followers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Subscribers</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                @for (int i = 0; i < 30; i++)
+                {
+                    <div class="chart-bar"></div>
+                }
+            </div>
+            <div class="chart-dates">
+                <span>Dec 1</span>
+                <span>Dec 8</span>
+                <span>Dec 15</span>
+            </div>
+
+            <div class="section-header" style="margin-top: 50px;">
+                <h2 class="section-title">Lifetime</h2>
+                <button class="date-btn">Latest ⌄</button>
+            </div>
+
+            <div class="table-header">
+                <div class="col-story">Story</div>
+                <div class="col-stat">Presentations ⓘ</div>
+                <div class="col-stat">Views</div>
+                <div class="col-stat">Reads</div>
+            </div>
+
+            <div class="empty-state-container">
+                <p class="empty-text">You haven't published any stories yet.</p>
+                <a href="/Home/Write" class="btn-black">Start writing</a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

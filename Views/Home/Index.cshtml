@@ -1,0 +1,362 @@
+﻿@model List<İÇERİK_YÖNETİMİ_VE_BLOG_1.Models.YaziModeli>
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novus - Blog</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            margin: 0;
+            background-color: white;
+            color: #242424;
+        }
+
+        :root {
+            --ocean-blue: #0D8ABC;
+            --medium-green: #1a8917;
+        }
+
+        .container-fluid {
+            display: flex;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* --- SOL MENÜ --- */
+        .sidebar-left {
+            width: 280px;
+            padding: 24px;
+            border-right: 1px solid #f2f2f2;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            /* gap: 15px;  <- İkon gidince boşluğa gerek kalmadı ama kalsa da sorun olmaz */
+            margin-bottom: 35px;
+        }
+
+        /* .hamburger-menu sınıfı artık kullanılmadığı için sildim veya etkisiz kaldı */
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 15px;
+            color: #757575;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+            .menu-item.active {
+                color: #000 !important;
+                font-weight: 600;
+            }
+
+            .menu-item:hover {
+                color: #000;
+            }
+
+        .menu-icon {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .menu-group {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #f2f2f2;
+        }
+
+        .menu-group-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #242424;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-group-subtitle {
+            font-size: 11px;
+            color: #757575;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* --- SAĞ ANA ALAN --- */
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-bar {
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            border-bottom: 1px solid #f2f2f2;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+
+        /* ARAMA FORMU */
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 240px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            background-color: #fafafa;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-icon-btn {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #757575;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 800px;
+            margin: 0;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 25px;
+            border-bottom: 1px solid #f2f2f2;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding-bottom: 15px;
+            font-size: 14px;
+            color: #757575;
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+        }
+
+            .tab.active {
+                color: #242424;
+                border-bottom: 1px solid #242424;
+            }
+
+        /* BLOG KARTI */
+        .post-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .post-card {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            padding: 25px 15px;
+            border-bottom: 1px solid #f2f2f2;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+            .post-card:hover {
+                background-color: #fcfcfc;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            }
+
+                .post-card:hover .post-title {
+                    color: var(--ocean-blue);
+                    transition: color 0.2s ease;
+                }
+
+        .post-text {
+            flex: 1;
+        }
+
+        .post-meta {
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .post-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+        }
+
+        .post-summary {
+            font-size: 16px;
+            color: #757575;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .post-image img {
+            width: 160px;
+            height: 105px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        .user-avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--ocean-blue);
+        }
+
+            .user-avatar-small img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        /* Write Butonu Düzenlemesi */
+        .write-btn {
+            color: var(--medium-green) !important;
+            margin-top: 0;
+            font-weight: 400;
+        }
+
+            .write-btn:hover {
+                color: #156d12 !important;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <nav class="sidebar-left">
+            <div class="logo-container">
+                <a asp-controller="Home" asp-action="Index" class="logo">NOVUS</a>
+            </div>
+
+            <a asp-controller="Home" asp-action="Index" class="menu-item active"><span class="menu-icon">🏠</span> Home</a>
+            <a asp-controller="Home" asp-action="Library" class="menu-item"><span class="menu-icon">📚</span> Library</a>
+            <a asp-controller="Home" asp-action="Profile" class="menu-item"><span class="menu-icon">👤</span> Profile</a>
+
+            <div class="menu-group">
+                <a asp-controller="Home" asp-action="Stories" class="menu-item"><span class="menu-icon">📝</span> Stories</a>
+                <a asp-controller="Home" asp-action="Stats" class="menu-item"><span class="menu-icon">📊</span> Stats</a>
+                <a asp-controller="Home" asp-action="Write" class="menu-item write-btn">
+                    <span class="menu-icon">✍️</span> Write
+                </a>
+            </div>
+            <div class="menu-group">
+                <div class="menu-group-title">FOLLOWERS</div>
+                <a href="/Home/Channels" class="menu-item">
+                    <span class="menu-icon">🔔</span> Channels
+                </a>
+            </div>
+
+            <div style="margin-top: auto; font-size: 11px; color: #bdc3c7;">
+                © 2025 Novus • Privacy • Terms
+            </div>
+        </nav>
+
+        <div class="content-area">
+            <header class="header-bar">
+                <div class="header-left">
+                    <form asp-controller="Home" asp-action="Index" method="get" class="search-container">
+                        <button type="submit" class="search-icon-btn">🔍</button>
+                        <input type="text" name="query" class="search-box" placeholder="Search" value="@Context.Request.Query["query"]" />
+                    </form>
+                </div>
+                <div class="header-right">
+                    <span style="font-size: 20px; cursor: pointer; color: #757575;">🔔</span>
+                    <div class="user-avatar-small">
+                        <img src="https://ui-avatars.com/api/?name=KA&background=0D8ABC&color=fff" alt="Profil">
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <div class="tabs">
+                    <div class="tab active">For you</div>
+                    <div class="tab">Following</div>
+                </div>
+
+                @if (Model.Count == 0)
+                {
+                    <p style="color: #757575; padding: 20px;">Aradığınız kriterlere uygun sonuç bulunamadı.</p>
+                }
+
+                @foreach (var yazi in Model)
+                {
+                    <a href="@Url.Action("Detay", "Home", new { id = yazi.Id })" class="post-link">
+                        <article class="post-card">
+                            <div class="post-text">
+                                <div class="post-meta">@yazi.Yazar • @yazi.Tarih</div>
+                                <h2 class="post-title">@yazi.Baslik</h2>
+                                <div class="post-summary">@yazi.IcerikOzet</div>
+                                <div style="font-size: 13px; color: #757575;">
+                                    💬 @yazi.YorumSayisi  ·  ❤️ @yazi.BegeniSayisi  ·  📥 Save
+                                </div>
+                            </div>
+                            <div class="post-image">
+                                <img src="@yazi.ResimUrl" alt="@yazi.Baslik">
+                            </div>
+                        </article>
+                    </a>
+                }
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>

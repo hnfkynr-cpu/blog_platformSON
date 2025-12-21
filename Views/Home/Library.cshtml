@@ -1,0 +1,398 @@
+﻿@model List<İÇERİK_YÖNETİMİ_VE_BLOG_1.Models.YaziModeli>
+
+@{
+    ViewData["Title"] = "Library";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novus - Library</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            margin: 0;
+            background-color: white;
+            color: #242424;
+        }
+
+        :root {
+            --ocean-blue: #0D8ABC;
+            --ocean-blue-hover: #0a6f99;
+            --medium-green: #1a8917;
+        }
+
+        .container-fluid {
+            display: flex;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* --- SOL MENÜ (Standart) --- */
+        .sidebar-left {
+            width: 280px;
+            padding: 24px;
+            border-right: 1px solid #f2f2f2;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            /* gap: 15px; <- İkon silindiği için boşluk gereksiz */
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 15px;
+            color: #757575;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+            .menu-item.active {
+                color: #000 !important;
+                font-weight: 600;
+            }
+
+            .menu-item:hover {
+                color: #000;
+            }
+
+        .menu-icon {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .menu-group {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #f2f2f2;
+        }
+
+        .menu-group-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #242424;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- SAĞ ANA ALAN --- */
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER DÜZENLEMESİ */
+        .header-bar {
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            border-bottom: 1px solid #f2f2f2;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+
+        /* DÜZELTİLEN ARAMA KUTUSU */
+        .header-left {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 240px; /* Genişlik sınırı */
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px 15px 10px 40px; /* Soldan 40px boşluk (ikon için) */
+            background-color: #fafafa;
+            border: 1px solid transparent;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+            .search-box:focus {
+                background-color: #fff;
+                border-color: #eee;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            }
+
+        .search-icon-static {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #757575;
+            font-size: 15px;
+            pointer-events: none; /* Tıklanmaz, sadece görsel */
+        }
+
+        .user-avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--ocean-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* --- LIBRARY İÇERİK --- */
+        .library-content {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .lib-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .lib-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        /* GÜNCELLENEN NEW LIST BUTONU (MAVİ) */
+        .btn-new-list {
+            background-color: var(--ocean-blue); /* ARTIK MAVİ */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+            .btn-new-list:hover {
+                background-color: var(--ocean-blue-hover); /* Hover efekti */
+            }
+
+        /* SEKMELER */
+        .lib-tabs {
+            display: flex;
+            gap: 30px;
+            border-bottom: 1px solid #f2f2f2;
+            margin-bottom: 30px;
+        }
+
+        .lib-tab {
+            padding-bottom: 15px;
+            font-size: 14px;
+            color: #757575;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+        }
+
+            .lib-tab:hover {
+                color: #242424;
+            }
+
+            .lib-tab.active {
+                color: #242424;
+                font-weight: 500;
+            }
+
+                .lib-tab.active::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 1px;
+                    background-color: #242424;
+                }
+
+        /* MAVİ BANNER */
+        .blue-banner {
+            background-color: var(--ocean-blue);
+            color: white;
+            padding: 35px 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(13, 138, 188, 0.2);
+        }
+
+        .btn-start-list {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 500;
+            transition: transform 0.1s;
+        }
+
+            .btn-start-list:active {
+                transform: scale(0.98);
+            }
+
+        /* LİSTE KARTI */
+        .reading-list-card {
+            background: #fafafa;
+            border: 1px solid #f2f2f2;
+            border-radius: 6px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+
+            .reading-list-card:hover {
+                border-color: #ddd;
+            }
+
+        .write-btn {
+            color: var(--medium-green) !important;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <nav class="sidebar-left">
+            <div class="logo-container">
+                <a asp-controller="Home" asp-action="Index" class="logo">NOVUS</a>
+            </div>
+
+            <a asp-controller="Home" asp-action="Index" class="menu-item"><span class="menu-icon">🏠</span> Home</a>
+            <a asp-controller="Home" asp-action="Library" class="menu-item active"><span class="menu-icon">📚</span> Library</a>
+            <a asp-controller="Home" asp-action="Profile" class="menu-item"><span class="menu-icon">👤</span> Profile</a>
+
+            <div class="menu-group">
+                <a asp-controller="Home" asp-action="Stories" class="menu-item"><span class="menu-icon">📝</span> Stories</a>
+                <a asp-controller="Home" asp-action="Stats" class="menu-item"><span class="menu-icon">📊</span> Stats</a>
+                <a asp-controller="Home" asp-action="Write" class="menu-item write-btn">
+                    <span class="menu-icon">✍️</span> Write
+                </a>
+            </div>
+
+            <div class="menu-group">
+                <div class="menu-group-title">FOLLOWERS</div>
+                <a href="/Home/Channels" class="menu-item">
+                    <span class="menu-icon">🔔</span> Channels
+                </a>
+            </div>
+        </nav>
+
+        <div class="content-area">
+            <header class="header-bar">
+                <div class="header-left">
+                    <div class="search-container">
+                        <span class="search-icon-static">🔍</span>
+                        <input type="text" class="search-box" placeholder="Search" />
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:25px;">
+                    <span style="cursor: pointer; color: #757575;">🔔</span>
+                    <div class="user-avatar-small">KA</div>
+                </div>
+            </header>
+
+            <main class="library-content">
+                <div class="lib-header">
+                    <h1 class="lib-title">Your library</h1>
+                    <button class="btn-new-list">New list</button>
+                </div>
+
+                <div class="lib-tabs">
+                    <a href="#" class="lib-tab active">Your lists</a>
+                    <a href="#" class="lib-tab">Saved lists</a>
+                    <a href="#" class="lib-tab">Highlights</a>
+                    <a href="#" class="lib-tab">Reading history</a>
+                    <a href="#" class="lib-tab">Responses</a>
+                </div>
+
+                <div class="blue-banner">
+                    <div style="position:relative; z-index:2;">
+                        <h2 style="font-size:22px; font-weight:700; margin:0 0 5px 0;">Create a list to easily<br>organize and share stories</h2>
+                        <button class="btn-start-list">Start a list</button>
+                    </div>
+                    <div style="font-size:80px; opacity:0.25; transform: rotate(15deg); position:absolute; right:30px; top:10px;">🔖</div>
+                </div>
+
+                <div class="reading-list-card">
+                    <div>
+                        <div style="font-size:13px; font-weight:500; display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                            <div class="user-avatar-small" style="width:24px; height:24px; font-size:10px;">KA</div>
+                            KA (Sen)
+                        </div>
+                        <h3 style="margin:0; font-size:20px; font-weight:700;">Reading list</h3>
+                        <div style="font-size:14px; color:#757575; margin-top:8px; display:flex; gap:10px; align-items:center;">
+                            <span>0 stories</span>
+                            <span style="width:3px; height:3px; background:#757575; border-radius:50%;"></span>
+                            <span style="display:inline-flex; align-items:center; gap:4px;">🔒 Private</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:3px; opacity:0.6;">
+                        <div style="width:50px; height:50px; background:#e0e0e0; border-radius:4px 0 0 4px;"></div>
+                        <div style="width:50px; height:50px; background:#d0d0d0;"></div>
+                        <div style="width:50px; height:50px; background:#c0c0c0; border-radius:0 4px 4px 0;"></div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>
