@@ -2,6 +2,10 @@
 using İÇERİK_YÖNETİMİ_VE_BLOG_1.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
+
+
+
 
 namespace İÇERİK_YÖNETİMİ_VE_BLOG_1.Controllers
 {
@@ -122,9 +126,21 @@ namespace İÇERİK_YÖNETİMİ_VE_BLOG_1.Controllers
 
         // HomeController.cs içine:
         public IActionResult Profile()
-        {
-            return View();
-        }
+{
+    // İsim Session'da yoksa varsayılan bir isim koy
+    var displayName = HttpContext.Session.GetString("DisplayName") ?? "Kullanıcı";
+
+    ViewBag.DisplayName = displayName;
+
+    // About için (önceden yaptığımız)
+    ViewBag.IsOwner = true;
+    ViewBag.AboutText = HttpContext.Session.GetString("AboutText") ?? "";
+
+    return View();
+}
+
+
+
         // HomeController.cs dosyasına ekle:
         public IActionResult Stories()
         {
@@ -183,5 +199,49 @@ namespace İÇERİK_YÖNETİMİ_VE_BLOG_1.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult About()
+{
+    return View();
+}
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public IActionResult UpdateAbout(string aboutText)
+{
+    aboutText = (aboutText ?? "").Trim();
+
+    // 900 karakter sınırı
+    if (aboutText.Length > 900)
+        aboutText = aboutText.Substring(0, 900);
+
+    // Session'a kaydet
+    HttpContext.Session.SetString("AboutText", aboutText);
+
+    // Tekrar Profile sayfasına dön
+    return RedirectToAction("Profile");
+}
+public IActionResult EditProfile()
+{
+    ViewBag.DisplayName = HttpContext.Session.GetString("DisplayName") ?? "Kullanıcı";
+    return View();
+}
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public IActionResult UpdateProfile(string displayName)
+{
+    displayName = (displayName ?? "").Trim();
+
+    // basit doğrulama
+    if (displayName.Length < 2) displayName = "Kullanıcı";
+    if (displayName.Length > 40) displayName = displayName.Substring(0, 40);
+
+    HttpContext.Session.SetString("DisplayName", displayName);
+
+    return RedirectToAction("Profile");
+}
+
+
     }
 }

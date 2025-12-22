@@ -11,14 +11,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profil - Novus</title>
+
     <style>
-        /* --- TEMEL AYARLAR --- */
+        /* ================== TEMEL ================== */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             margin: 0;
             background-color: #fff;
             color: #242424;
-            overflow-x: hidden; /* Yan kaydırmayı engelle */
+            overflow-x: hidden;
         }
 
         .layout-container {
@@ -26,7 +27,7 @@
             min-height: 100vh;
         }
 
-        /* --- 1. SOL MENÜ (Stabil Tasarım) --- */
+        /* ================== SOL SIDEBAR ================== */
         .sidebar-left {
             width: 280px;
             padding: 24px;
@@ -36,17 +37,7 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            box-sizing: border-box;
-            flex-shrink: 0;
-            background-color: white;
-            z-index: 100;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            /* gap: 15px; <- İkon silindiği için boşluk gereksiz */
-            margin-bottom: 35px;
+            background: #fff;
         }
 
         .logo {
@@ -55,6 +46,7 @@
             letter-spacing: -1px;
             color: #000;
             text-decoration: none;
+            margin-bottom: 35px;
         }
 
         .menu-item {
@@ -64,267 +56,473 @@
             font-size: 15px;
             color: #757575;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: .2s;
         }
 
-            .menu-item:hover, .menu-item.active {
-                color: #000;
-                font-weight: 500;
-            }
+        .menu-item:hover,
+        .menu-item.active {
+            color: #000;
+            font-weight: 500;
+        }
 
         .menu-icon {
-            margin-right: 15px;
-            font-size: 20px;
-            text-align: center;
             width: 24px;
+            margin-right: 15px;
+            font-size: 18px;
         }
 
-        /* Özel Renkli Write Butonu */
         .write-btn {
             color: #1a8917 !important;
-            margin-top: 10px;
         }
 
-            .write-btn:hover {
-                color: #156d12 !important;
-            }
-
-        /* Gruplama Çizgisi ve Başlıkları */
         .menu-group {
             margin-top: 25px;
             padding-top: 15px;
             border-top: 1px solid #f2f2f2;
-            display: flex;
-            flex-direction: column;
         }
 
         .menu-group-title {
             font-size: 12px;
             font-weight: 700;
-            color: #242424;
             margin-bottom: 15px;
-            text-transform: uppercase;
         }
 
-
-        /* --- 2. ORTA İÇERİK --- */
+        /* ================== ORTA ALAN ================== */
         .main-content {
             flex: 1;
             padding: 50px 80px;
             max-width: 700px;
+            text-align: center;
         }
 
         .profile-name-header {
             font-size: 42px;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 30px;
-            color: #242424;
+            font-family: ui-serif, Georgia, serif;
         }
 
+        /* ================== TABS ================== */
         .tabs {
             display: flex;
-            gap: 30px;
-            border-bottom: 1px solid #f2f2f2;
-            margin-bottom: 40px;
+            gap: 16px;
+            align-items: center;
+            margin: 0 0 14px;
+            justify-content: center;
         }
 
         .tab {
-            padding-bottom: 15px;
+            border: 0;
+            background: transparent;
+            padding: 10px 8px;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            color: #6b7280;
+        }
+
+        .tab.active {
+            color: #242424;
+            font-weight: 500;
+            border-bottom: 1px solid #242424;
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ================== EMPTY STATE (PREMIUM) ================== */
+        .empty-state-card {
+            border: 1px solid #f2f2f2;
+            border-radius: 14px;
+            padding: 32px 26px;
+            background: #fff;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.05);
+            transition: .2s;
+        }
+
+        .empty-state-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 42px rgba(0,0,0,0.08);
+        }
+
+        .empty-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .empty-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            font-family: ui-rounded, "Segoe UI", sans-serif;
+        }
+
+        .empty-desc {
             font-size: 14px;
             color: #757575;
-            cursor: pointer;
-            border-bottom: 1px solid transparent;
+            margin-bottom: 20px;
         }
 
-            .tab.active {
-                color: #242424;
-                font-weight: 500;
-                border-bottom: 1px solid #242424;
-            }
-
-        /* Reading List Kartı */
-        .reading-list-card {
-            border: 1px solid #f2f2f2;
-            border-radius: 4px;
-            padding: 20px;
+        .empty-actions {
             display: flex;
-            justify-content: space-between;
-            background-color: #fafafa;
-            cursor: pointer;
-            margin-bottom: 30px;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .card-left {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card-user-info {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .card-user-avatar {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #000;
-            margin-right: 8px;
-        }
-
-        .card-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 30px;
-        }
-
-        .card-footer {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            color: #757575;
-            gap: 10px;
-        }
-
-        .card-right-visual {
-            display: flex;
-            gap: 2px;
+        .empty-btn {
+            padding: 10px 16px;
+            border-radius: 999px;
             border: 1px solid #e6e6e6;
-            border-radius: 4px;
-            overflow: hidden;
-            width: 140px;
-            height: 100px;
-            background: white;
-            padding: 2px;
+            text-decoration: none;
+            font-size: 14px;
+            color: #242424;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: .15s;
         }
 
-        .gray-bar {
-            flex: 1;
-            background-color: #f2f2f2;
+        .empty-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.06);
         }
 
+        .empty-btn.primary {
+            color: #1a8917;
+            font-weight: 600;
+            border-color: rgba(26,137,23,.4);
+        }
 
-        /* --- 3. SAĞ KENAR ÇUBUĞU --- */
+        /* ================== SAĞ SIDEBAR ================== */
         .sidebar-right {
             width: 320px;
             border-left: 1px solid #f2f2f2;
             padding: 40px;
-            display: flex;
-            flex-direction: column;
         }
 
         .profile-pic-large {
             width: 88px;
             height: 88px;
             border-radius: 50%;
-            background-color: #000;
-            margin-bottom: 20px;
+            background: #000;
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
-            .profile-pic-large img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+        .profile-pic-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         .sidebar-name {
             font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        .edit-profile-link {
+        .edit-profile-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(26,137,23,.4);
+            background: rgba(26,137,23,.08);
             color: #1a8917;
-            font-size: 14px;
+            font-weight: 700;
             text-decoration: none;
-            margin-bottom: 30px;
+            transition: .15s;
         }
 
+        .edit-profile-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(0,0,0,.08);
+        }
+
+        /* ================== ABOUT UI (EKLENDİ) ================== */
+        .about-card h2{
+            margin: 12px 0 6px;
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .muted { color:#6b7280; }
+
+        .bioBox{
+            margin-top: 18px;
+            border: 1px solid #f2f2f2;
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.05);
+            padding: 18px;
+            text-align: left;
+        }
+
+        .bioInner{
+            border-radius: 12px;
+        }
+
+        .readonlyText{
+            white-space: pre-wrap;
+            line-height: 1.8;
+            margin: 0;
+            font-size: 14.5px;
+            color: #242424;
+        }
+
+        textarea{
+            width: 100%;
+            min-height: 180px;
+            resize: vertical;
+            border-radius: 12px;
+            border: 1px solid #e6e6e6;
+            padding: 12px 12px;
+            font-size: 14px;
+            line-height: 1.7;
+            outline: none;
+        }
+
+        textarea:focus{
+            border-color: rgba(26,137,23,.45);
+            box-shadow: 0 0 0 4px rgba(26,137,23,.12);
+        }
+
+        .hintRow{
+            display:flex;
+            justify-content:space-between;
+            margin-top: 10px;
+            color: #6b7280;
+            font-size: 12.5px;
+        }
+
+        .actions{
+            display:flex;
+            gap:10px;
+            justify-content:flex-end;
+            flex-wrap:wrap;
+            margin-top: 12px;
+        }
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid #e6e6e6;
+            background: #fff;
+            color: #242424;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration:none;
+            transition: .15s;
+        }
+
+        .btn:hover{
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+        }
+
+        .btnPrimary{
+            color: #1a8917;
+            border-color: rgba(26,137,23,.4);
+            background: rgba(26,137,23,.08);
+        }
     </style>
 </head>
+
 <body>
 
-    <div class="layout-container">
+<div class="layout-container">
 
-        <nav class="sidebar-left">
-            <div class="logo-container">
-                <a href="/Home/Index" class="logo">NOVUS</a>
+    <!-- SOL MENÜ -->
+    <nav class="sidebar-left">
+        <a href="/Home/Index" class="logo">NOVUS</a>
+
+        <a href="/Home/Index" class="menu-item"><span class="menu-icon">🏠</span>Home</a>
+        <a href="/Home/Library" class="menu-item"><span class="menu-icon">📚</span>Library</a>
+        <a href="/Home/Profile" class="menu-item active"><span class="menu-icon">👤</span>Profile</a>
+
+        <div class="menu-group">
+            <a href="/Home/Stories" class="menu-item"><span class="menu-icon">📝</span>Stories</a>
+            <a href="/Home/Stats" class="menu-item"><span class="menu-icon">📊</span>Stats</a>
+            <a href="/Home/Write" class="menu-item write-btn"><span class="menu-icon">✍️</span>Write</a>
+        </div>
+
+        <div style="margin-top:auto;font-size:11px;color:#bdc3c7">
+            © 2025 Novus
+        </div>
+    </nav>
+
+    <!-- ORTA -->
+    <main class="main-content">
+        <h1 class="profile-name-header">@ViewBag.DisplayName</h1>
+
+
+        <div class="tabs">
+            <button type="button" class="tab active" data-tab="home">🏡 Home</button>
+            <button type="button" class="tab" data-tab="about">ℹ️ About</button>
+        </div>
+
+        <!-- HOME İÇERİĞİ -->
+        <div id="tab-home" class="tab-panel active">
+            <div class="empty-state-card">
+                <div class="empty-icon">📝</div>
+                <div class="empty-title">Henüz bir hikaye yok</div>
+                <div class="empty-desc">İlk yazını paylaşmak için “Write” bölümünden başlayabilirsin.</div>
+
+                <div class="empty-actions">
+                    <a class="empty-btn primary" href="/Home/Write">✍️ Yeni Yazı</a>
+                    <a class="empty-btn" href="/Home/MyStories">📚 Hikayelerim</a>
+                </div>
             </div>
+        </div>
 
-            <a href="/Home/Index" class="menu-item"><span class="menu-icon">🏠</span> Home</a>
-            <a href="/Home/Library" class="menu-item"><span class="menu-icon">📚</span> Library</a>
+        <!-- ABOUT İÇERİĞİ (DÜZENLE BUTONLU) -->
 
-            <a href="/Home/Profile" class="menu-item active"><span class="menu-icon">👤</span> Profile</a>
+ 
+        <div id="tab-about" class="tab-panel">
+            @{
+                bool isOwner = (ViewBag.IsOwner as bool?) ?? true;
+                string aboutText = ViewBag.AboutText as string ?? "";
+            }
 
-            <div class="menu-group">
-                <a href="/Home/Stories" class="menu-item"><span class="menu-icon">📝</span> Stories</a>
-                <a href="/Home/Stats" class="menu-item"><span class="menu-icon">📊</span> Stats</a>
-                <a href="/Home/Write" class="menu-item write-btn">
-                    <span class="menu-icon">✍️</span> Write
-                </a>
-            </div>
+            <section class="about-card">
+                <h2>Hakkımda ✨</h2>
+                
 
-            <div class="menu-group">
-                <div class="menu-group-title">FOLLOWERS</div>
-                <a href="/Home/Channels" class="menu-item">
-                    <span class="menu-icon">🔔</span> Channels
-                </a>
-            </div>
+                <p class="muted">Kendini kısa ve samimi bir dille tanıt. Ziyaretçiler burada seni tanısın.</p>
 
-            <div style="margin-top: auto; font-size: 11px; color: #bdc3c7;">
-                © 2025 Novus • Privacy • Terms
-            </div>
-        </nav>
+                <div class="bioBox">
+                    <div class="bioInner">
 
+                        <!-- GÖRÜNTÜLEME MODU -->
+                        <div id="aboutView" style="display:block;">
+                            @if (!string.IsNullOrWhiteSpace(aboutText))
+                            {
+                                <p class="readonlyText">@aboutText</p>
+                            }
+                            else
+                            {
+                         <p class="readonlyText muted">Henüz “Hakkımda” metni eklenmemiş.</p>
+                            }
 
-        <main class="main-content">
-            <h1 class="profile-name-header">ZeynepSelimeKartal</h1>
-
-            <div class="tabs">
-                <div class="tab active">Home</div>
-                <div class="tab">About</div>
-            </div>
-
-            <div class="reading-list-card">
-                <div class="card-left">
-                    <div>
-                        <div class="card-user-info">
-                            <div class="card-user-avatar">
-                                <img src="https://ui-avatars.com/api/?name=Zeynep+Selime&background=000&color=fff" style="width:100%; height:100%; border-radius:50%;">
-                            </div>
-                            <span>ZeynepSelimeKartal</span>
+                            @if (isOwner)
+                            {
+                                <div class="actions" style="justify-content:center;">
+                                    <button type="button" class="btn" id="btnEditAbout">✏️ Düzenle</button>
+                                </div>
+                            }
                         </div>
-                        <div class="card-title">Reading list</div>
-                    </div>
-                    <div class="card-footer">
-                        <span>No stories</span>
-                        <span>🔒</span>
-                        <span style="margin-left:auto; font-size:18px;">...</span>
+
+                        <!-- DÜZENLEME MODU -->
+                        @if (isOwner)
+                        {
+                            <div id="aboutEdit" style="display:none;">
+                                <form method="post" action="/Home/UpdateAbout">
+                                    @Html.AntiForgeryToken()
+
+                                    <textarea id="aboutText" name="aboutText" maxlength="900"
+                                              placeholder="Hakkımda...">@aboutText</textarea>
+
+                                    <div class="hintRow">
+                                        <span>900 karakter sınırı</span>
+                                        <span><b id="charCount">0</b>/900</span>
+                                    </div>
+
+                                    <div class="actions">
+                                        <button type="submit" class="btn btnPrimary">💾 Kaydet</button>
+                                        <button type="button" class="btn" id="btnCancelAbout">↩️ İptal</button>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+
                     </div>
                 </div>
-                <div class="card-right-visual">
-                    <div class="gray-bar"></div>
-                    <div class="gray-bar"></div>
-                    <div class="gray-bar"></div>
-                </div>
-            </div>
-        </main>
+            </section>
+        </div>
+
+        <script>
+            // Tab değiştirme
+            const tabs = document.querySelectorAll(".tab");
+            const panels = {
+                home: document.getElementById("tab-home"),
+                about: document.getElementById("tab-about")
+            };
+
+            tabs.forEach(t => {
+                t.addEventListener("click", () => {
+                    tabs.forEach(x => x.classList.remove("active"));
+                    t.classList.add("active");
+
+                    Object.values(panels).forEach(p => p.classList.remove("active"));
+
+                    const key = t.getAttribute("data-tab");
+                    panels[key].classList.add("active");
+                });
+            });
+
+            // About edit toggle + char count
+            (function () {
+                const btnEdit = document.getElementById("btnEditAbout");
+                const btnCancel = document.getElementById("btnCancelAbout");
+                const view = document.getElementById("aboutView");
+                const edit = document.getElementById("aboutEdit");
+                const ta = document.getElementById("aboutText");
+                const countEl = document.getElementById("charCount");
+
+                function countChars() {
+                    if (!ta || !countEl) return;
+                    countEl.textContent = ta.value.length;
+                }
+
+                function showEdit() {
+                    if (!view || !edit) return;
+                    view.style.display = "none";
+                    edit.style.display = "block";
+                    countChars();
+                    if (ta) ta.focus();
+                }
+
+                function showView() {
+                    if (!view || !edit) return;
+                    edit.style.display = "none";
+                    view.style.display = "block";
+
+                    // iptal edince textarea eski metne dönsün
+                    if (ta) {
+                        ta.value = `@aboutText`.replaceAll("\r\n", "\n");
+                        countChars();
+                    }
+                }
+
+                if (btnEdit) btnEdit.addEventListener("click", showEdit);
+                if (btnCancel) btnCancel.addEventListener("click", showView);
+                if (ta) ta.addEventListener("input", countChars);
+
+                countChars();
+            })();
+        </script>
+
+    </main>
+
+    <!-- SAĞ -->
+    <aside class="sidebar-right">
+        <div class="profile-pic-large">
+            <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString((string)ViewBag.DisplayName)&background=000&color=fff&size=128" />
+
+        </div>
+
+        <div class="sidebar-name">@ViewBag.DisplayName</div>
 
 
-        <aside class="sidebar-right">
-            <div class="profile-pic-large">
-                <img src="https://ui-avatars.com/api/?name=Z+K&background=000&color=fff&size=128" alt="Profile">
-            </div>
-            <div class="sidebar-name">ZeynepSelimeKartal</div>
-            <a href="#" class="edit-profile-link">Edit profile</a>
-        </aside>
+        <a href="/Home/EditProfile" class="edit-profile-btn">
+            ⚙️ Edit profile
+        </a>
+    </aside>
 
-    </div>
+</div>
 
 </body>
 </html>

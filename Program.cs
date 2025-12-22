@@ -1,4 +1,3 @@
-
 namespace İÇERİK_YÖNETİMİ_VE_BLOG_1
 {
     public class Program
@@ -7,9 +6,10 @@ namespace İÇERİK_YÖNETİMİ_VE_BLOG_1
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
 
             var app = builder.Build();
 
@@ -17,7 +17,6 @@ namespace İÇERİK_YÖNETİMİ_VE_BLOG_1
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -25,6 +24,8 @@ namespace İÇERİK_YÖNETİMİ_VE_BLOG_1
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthorization();
 
