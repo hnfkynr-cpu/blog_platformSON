@@ -1,0 +1,380 @@
+﻿@model İÇERİK_YÖNETİMİ_VE_BLOG_1.Models.YaziModeli
+
+@{
+    ViewData["Title"] = Model?.Baslik ?? "Blog Detay";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        :root {
+            --ink: #0b1220;
+            --muted: #64748b;
+            --muted2: #94a3b8;
+            --ocean: #0D8ABC;
+            --lav: #a78bfa;
+            --mint: #37c8a6;
+            --pink: #ff7aa2;
+            --sun: #ffd36e;
+            --border: rgba(15,23,42,.10);
+            --border2: rgba(15,23,42,.08);
+            --shadow: 0 22px 60px rgba(15,23,42,.12);
+            --shadow-soft: 0 14px 34px rgba(15,23,42,.08);
+            --r: 22px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;
+            margin: 0;
+            color: var(--ink);
+            background: radial-gradient(980px 520px at 18% 10%, rgba(13,138,188,.14), transparent 60%), radial-gradient(980px 560px at 82% 18%, rgba(167,139,250,.16), transparent 60%), radial-gradient(980px 560px at 62% 92%, rgba(55,200,166,.14), transparent 60%), linear-gradient(180deg,#f7fbff,#ffffff 55%,#fbf8ff);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sayfayı daha “dolu” gösteren geniş wrap + kart hissi */
+        .wrap {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 46px 26px 70px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+            .wrap::before {
+                content: "";
+                position: absolute;
+                inset: 0 0 auto 0;
+                height: 260px;
+                pointer-events: none;
+                background: radial-gradient(260px 160px at 14% 50%, rgba(255,122,162,.12), transparent 60%), radial-gradient(260px 160px at 55% 20%, rgba(167,139,250,.12), transparent 60%), radial-gradient(260px 160px at 88% 70%, rgba(55,200,166,.10), transparent 60%);
+                filter: blur(2px);
+                opacity: .9;
+            }
+
+        /* Üst geri dönüş linki */
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--ocean);
+            margin-bottom: 18px;
+            font-weight: 800;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(13,138,188,.08);
+            border: 1px solid rgba(13,138,188,.18);
+            box-shadow: 0 12px 24px rgba(13,138,188,.10);
+            position: relative;
+            z-index: 1;
+            transition: .18s;
+        }
+
+            .back:hover {
+                transform: translateY(-1px);
+                background: rgba(13,138,188,.10);
+                box-shadow: 0 16px 32px rgba(13,138,188,.12);
+            }
+
+        /* İçerik alanını kart gibi hissettir */
+        .meta,
+        h1,
+        .content,
+        .actions,
+        .comment-box {
+            position: relative;
+            z-index: 1;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 10px;
+            letter-spacing: .1px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0 0 14px;
+            font-size: 42px;
+            line-height: 1.15;
+            letter-spacing: -0.8px;
+            font-family: ui-serif, Georgia, serif;
+            color: var(--ink);
+        }
+
+        /* Kategori chipleri (inline stilin üstüne daha iyi görünüm) */
+        .wrap span[style*="border-radius:999px"] {
+            border: 1px solid rgba(15,23,42,.10) !important;
+            background: rgba(255,255,255,.75) !important;
+            box-shadow: 0 10px 20px rgba(15,23,42,.05);
+            color: rgba(15,23,42,.78) !important;
+            padding: 7px 12px !important;
+            backdrop-filter: blur(10px);
+        }
+
+        /* İçerik kutusu */
+        .content {
+            margin-top: 18px;
+            line-height: 1.9;
+            font-size: 16.2px;
+            white-space: pre-line;
+            color: rgba(15,23,42,.86);
+            background: rgba(255,255,255,.78);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 22px 22px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+        }
+
+        /* Aksiyonlar */
+        .actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 1px solid rgba(15,23,42,.12);
+            background: rgba(255,255,255,.86);
+            padding: 11px 14px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 14px;
+            color: rgba(15,23,42,.90);
+            box-shadow: 0 12px 22px rgba(15,23,42,.06);
+            transition: .18s ease;
+        }
+
+            .btn:hover {
+                transform: translateY(-1px);
+                border-color: rgba(13,138,188,.22);
+                box-shadow: 0 16px 34px rgba(15,23,42,.10);
+            }
+
+            .btn:active {
+                transform: translateY(0px);
+            }
+
+        /* Like / Save butonlarına tatlı gradient dokunuş (sadece görünüm) */
+        form[action*="ToggleLike"] .btn {
+            background: linear-gradient(135deg, rgba(255,122,162,.14), rgba(255,255,255,.86));
+            border-color: rgba(255,122,162,.24);
+        }
+
+        form[action*="ToggleSave"] .btn {
+            background: linear-gradient(135deg, rgba(55,200,166,.14), rgba(255,255,255,.86));
+            border-color: rgba(55,200,166,.22);
+        }
+
+        /* Yorum sayısı text */
+        .actions > div[style*="font-size:14px"] {
+            color: var(--muted) !important;
+            font-weight: 700;
+            background: rgba(255,255,255,.70);
+            border: 1px solid var(--border2);
+            padding: 10px 12px;
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Yorum alanı */
+        .comment-box {
+            margin-top: 28px;
+            border-top: 1px solid rgba(15,23,42,.10);
+            padding-top: 18px;
+        }
+
+            .comment-box h3 {
+                margin: 0 0 12px !important;
+                font-size: 18px;
+                font-weight: 950;
+                letter-spacing: -.2px;
+                color: rgba(15,23,42,.92);
+            }
+
+        textarea {
+            width: 100%;
+            border: 1px solid rgba(15,23,42,.12);
+            border-radius: 16px;
+            padding: 14px;
+            box-sizing: border-box;
+            font-size: 14.5px;
+            outline: none;
+            background: rgba(255,255,255,.86);
+            box-shadow: 0 10px 18px rgba(15,23,42,.05);
+            transition: .18s ease;
+        }
+
+            textarea:focus {
+                border-color: rgba(13,138,188,.35);
+                box-shadow: 0 0 0 5px rgba(13,138,188,.12), 0 18px 44px rgba(13,138,188,.10);
+                background: rgba(255,255,255,.96);
+            }
+
+        /* Yorum listesi */
+        .comment-list {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .comment {
+            border: 1px solid rgba(15,23,42,.10);
+            border-radius: 18px;
+            padding: 14px 16px;
+            background: rgba(255,255,255,.78);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(10px);
+            transition: .18s;
+        }
+
+            .comment:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 18px 44px rgba(15,23,42,.10);
+                border-color: rgba(13,138,188,.16);
+            }
+
+            .comment .who {
+                font-weight: 950;
+                margin-bottom: 3px;
+                letter-spacing: -.2px;
+                color: rgba(15,23,42,.92);
+            }
+
+            .comment .when {
+                font-size: 12px;
+                color: var(--muted2);
+                opacity: 1;
+                margin-bottom: 8px;
+            }
+
+            .comment .text {
+                white-space: pre-line;
+                line-height: 1.75;
+                color: rgba(15,23,42,.82);
+                font-size: 14.5px;
+            }
+
+        /* "Henüz yorum yok" mesajı */
+        .comment-box > div[style*="Henüz yorum yok"] {
+            color: var(--muted) !important;
+        }
+
+        /* Responsive */
+        @@media (max-width: 900px) {
+            .wrap {
+                padding: 34px 16px 60px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .content {
+                padding: 18px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="wrap">
+        <a asp-controller="Home" asp-action="Index" class="back">← Ana sayfaya dön</a>
+
+        <div class="meta">@Model.Yazar • @Model.Tarih</div>
+        <h1>@Model.Baslik</h1>
+        @if (Model.Kategoriler != null && Model.Kategoriler.Count > 0)
+        {
+            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+                @foreach (var k in Model.Kategoriler)
+                {
+                    <span style="padding:6px 10px; border:1px solid #e6e6e6; border-radius:999px; font-size:13px; color:#444;">
+                        @k
+                    </span>
+                }
+            </div>
+        }
+
+
+        <!-- ✅ Detay: TAM İÇERİK -->
+        <div class="content">
+            @Model.Icerik
+        </div>
+
+        <div class="actions">
+            <!-- ✅ Like -->
+            <form asp-action="ToggleLike" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="blogId" value="@Model.Id" />
+                <button type="submit" class="btn">❤️ Beğen (@Model.BegeniSayisi)</button>
+            </form>
+            <!-- ✅ Save -->
+            <form asp-action="ToggleSave" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="blogId" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                <button type="submit" class="btn">
+                    @(Model.IsSaved ? "📥 Kaydedildi" : "📥 Kaydet") (@Model.KaydetSayisi)
+                </button>
+            </form>
+
+
+            <div style="color:#757575; font-size:14px;">
+                💬 @Model.YorumSayisi yorum
+            </div>
+        </div>
+
+        <!-- ✅ Yorum ekleme -->
+        <div class="comment-box">
+            <h3 style="margin:0 0 10px;">Yorum yaz</h3>
+
+            <form asp-action="AddComment" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="blogId" value="@Model.Id" />
+                <textarea name="commentText" rows="4" placeholder="Yorum yaz..."></textarea>
+                <button type="submit" class="btn" style="margin-top:10px;">Yorum Gönder</button>
+            </form>
+
+            <!-- ✅ Yorumları listele (Model.Yorumlar eklediysen) -->
+            @if (Model.Yorumlar != null && Model.Yorumlar.Count > 0)
+            {
+                <div class="comment-list">
+                    @foreach (var y in Model.Yorumlar)
+                    {
+                        <div class="comment">
+                            <div class="who">@y.Yazar</div>
+                            <div class="when">@y.Tarih.ToString("dd MMM yyyy")</div>
+                            <div class="text">@y.Metin</div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div style="margin-top:14px; color:#757575;">Henüz yorum yok.</div>
+            }
+        </div>
+    </div>
+
+</body>
+</html>

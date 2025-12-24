@@ -1,6 +1,10 @@
-﻿﻿@{
-ViewData["Title"] = "Write";
-Layout = null; /* Bu sayfada sol menü YOK, temiz bir sayfa */
+﻿@using İÇERİK_YÖNETİMİ_VE_BLOG_1.Models.Scaffold
+@{
+    ViewData["Title"] = "Write";
+    Layout = null;
+
+    var categories = ViewBag.Categories as List<Category> ?? new List<Category>();
+    string err = ViewBag.Error as string;
 }
 
 <!DOCTYPE html>
@@ -10,267 +14,401 @@ Layout = null; /* Bu sayfada sol menü YOK, temiz bir sayfa */
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Novus - Write</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            margin: 0;
-            background-color: white;
-            color: #242424;
+        :root {
+            --ink: #0b1220;
+            --muted: #64748b;
+            --muted2: #94a3b8;
+            --ocean: #0D8ABC;
+            --green: #1a8917;
+            --lav: #a78bfa;
+            --mint: #37c8a6;
+            --pink: #ff7aa2;
+            --sun: #ffd36e;
+            --border: rgba(15,23,42,.10);
+            --border2: rgba(15,23,42,.08);
+            --shadow: 0 22px 60px rgba(15,23,42,.12);
+            --shadow-soft: 0 14px 34px rgba(15,23,42,.08);
+            --r: 22px;
         }
 
-        /* --- ÜST HEADER (MENÜSÜZ) --- */
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;
+            margin: 0;
+            color: var(--ink);
+            background: radial-gradient(980px 520px at 18% 10%, rgba(13,138,188,.14), transparent 60%), radial-gradient(980px 560px at 82% 18%, rgba(167,139,250,.16), transparent 60%), radial-gradient(980px 560px at 62% 92%, rgba(55,200,166,.14), transparent 60%), linear-gradient(180deg,#f7fbff,#ffffff 55%,#fbf8ff);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Üst header */
         .editor-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
-            max-width: 1000px;
-            margin: 0 auto;
+            padding: 18px 40px;
+            max-width: 1120px;
+            margin: 14px auto 0;
+            border: 1px solid var(--border2);
+            border-radius: 999px;
+            background: rgba(255,255,255,.78);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 44px rgba(15,23,42,.08);
+            position: sticky;
+            top: 12px;
+            z-index: 50;
         }
 
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 14px;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 800;
+            font-size: 26px;
+            font-weight: 950;
             letter-spacing: -1px;
             color: #000;
             text-decoration: none;
-            font-family: serif; /* Medium logosu gibi serif */
+            font-family: ui-serif, Georgia, serif;
         }
 
         .draft-status {
-            font-size: 13px;
-            color: #757575;
-            margin-top: 4px;
+            font-size: 12.5px;
+            color: var(--muted);
+            margin-top: 2px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(167,139,250,.16), rgba(13,138,188,.10));
+            border: 1px solid rgba(167,139,250,.20);
+            font-weight: 800;
+            letter-spacing: .2px;
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 14px;
         }
 
         .btn-publish {
-            background-color: #1a8917; /* Medium Yeşili */
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
+            background: linear-gradient(135deg, rgba(55,200,166,.26), rgba(255,211,110,.20));
+            color: #0b1220;
+            border: 1px solid rgba(26,137,23,.22);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 13.5px;
             cursor: pointer;
-            opacity: 0.5; /* Henüz yazı yazılmadıysa soluk */
-            transition: opacity 0.2s;
+            font-weight: 950;
+            box-shadow: 0 14px 28px rgba(26,137,23,.10);
+            transition: .18s ease;
         }
 
             .btn-publish:hover {
-                opacity: 1;
+                transform: translateY(-1px);
+                box-shadow: 0 18px 40px rgba(26,137,23,.14);
+                border-color: rgba(26,137,23,.32);
+            }
+
+            .btn-publish:active {
+                transform: translateY(0px);
             }
 
         .icon-btn {
             font-size: 18px;
-            color: #757575;
+            color: var(--muted);
             cursor: pointer;
             text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            background: transparent;
+            transition: .18s;
+            user-select: none;
         }
 
+            .icon-btn:hover {
+                color: rgba(15,23,42,.92);
+                background: rgba(13,138,188,.08);
+                border-color: rgba(13,138,188,.16);
+                transform: translateY(-1px);
+            }
+
         .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: black;
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--ocean), var(--lav));
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
+            font-weight: 950;
+            letter-spacing: .5px;
+            box-shadow: 0 16px 40px rgba(13,138,188,.18);
+            border: 2px solid rgba(255,255,255,.9);
         }
 
-        /* --- EDİTÖR ALANI --- */
+        /* Editör alanı */
         .editor-container {
-            max-width: 740px;
-            margin: 60px auto;
+            max-width: 860px; /* daha dolu */
+            margin: 28px auto 70px;
             padding: 0 20px;
             position: relative;
         }
 
-        /* Başlık Alanı */
+            .editor-container::before {
+                content: "";
+                position: absolute;
+                inset: -16px 0 auto 0;
+                height: 220px;
+                pointer-events: none;
+                background: radial-gradient(260px 160px at 10% 55%, rgba(255,122,162,.12), transparent 60%), radial-gradient(260px 160px at 60% 20%, rgba(167,139,250,.12), transparent 60%), radial-gradient(260px 160px at 90% 70%, rgba(55,200,166,.10), transparent 60%);
+                filter: blur(2px);
+                opacity: .9;
+            }
+
+        /* Editör kartı hissi (inputlar kartın içinde dursun) */
+        .input-title,
+        .input-story,
+        .category-panel,
+        .error-box {
+            position: relative;
+            z-index: 1;
+        }
+
         .input-title {
-            font-family: "Charter", "Bitstream Charter", "Sitka Text", Cambria, serif; /* Serif font */
-            font-size: 42px;
-            border: none;
+            font-family: "Charter","Bitstream Charter","Sitka Text",Cambria,serif;
+            font-size: 46px;
+            border: 1px solid transparent;
             outline: none;
             width: 100%;
-            color: #242424;
-            font-weight: 400;
-            margin-bottom: 20px;
+            color: var(--ink);
+            font-weight: 500;
+            margin: 10px 0 12px;
+            padding: 10px 10px;
+            border-radius: 16px;
+            background: rgba(255,255,255,.55);
+            transition: .18s ease;
         }
 
             .input-title::placeholder {
-                color: #b3b3b1;
-                font-style: italic;
-                opacity: 1;
+                color: rgba(100,116,139,.65);
+                font-style: italic_toggle;
             }
 
-        /* Hikaye Alanı */
+            .input-title:focus {
+                border-color: rgba(13,138,188,.30);
+                background: rgba(255,255,255,.85);
+                box-shadow: 0 0 0 6px rgba(13,138,188,.12);
+            }
+
         .input-story {
-            font-family: "Charter", "Bitstream Charter", "Sitka Text", Cambria, serif;
-            font-size: 21px;
-            border: none;
+            font-family: "Charter","Bitstream Charter","Sitka Text",Cambria,serif;
+            font-size: 22px;
+            border: 1px solid var(--border);
             outline: none;
             width: 100%;
-            color: #242424;
-            min-height: 300px;
-            line-height: 1.58;
+            color: rgba(15,23,42,.90);
+            min-height: 360px; /* daha dolu */
+            line-height: 1.68;
+            resize: vertical;
+            padding: 18px 18px;
+            border-radius: var(--r);
+            background: rgba(255,255,255,.78);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow);
+            transition: .18s ease;
         }
 
             .input-story::placeholder {
-                color: #b3b3b1;
+                color: rgba(100,116,139,.62);
                 font-style: italic;
             }
 
-        /* Artı Butonu (Solda çıkan) */
-        .add-button-wrapper {
-            position: absolute;
-            left: -50px;
-            top: 105px; /* Tell your story hizası */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-circle-plus {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            border: 1px solid #757575;
-            background: white;
-            color: #757575;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-weight: 300;
-        }
-
-        /* --- ALT FORMATLAMA TOOLBAR (Görseldeki Siyah Kutu) --- */
-        .formatting-help-container {
-            text-align: center;
-            margin-top: 100px;
-            margin-bottom: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            color: #757575;
-            font-size: 14px;
-        }
-
-        .toolbar-box {
-            background-color: #242424;
-            padding: 8px 16px;
-            border-radius: 5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-        }
-
-            /* Toolbar Ok İşareti (Aşağı bakan) */
-            .toolbar-box::after {
-                content: '';
-                position: absolute;
-                bottom: -6px;
-                left: 50%;
-                transform: translateX(-50%);
-                border-left: 6px solid transparent;
-                border-right: 6px solid transparent;
-                border-top: 6px solid #242424;
+            .input-story:focus {
+                border-color: rgba(167,139,250,.32);
+                box-shadow: 0 0 0 6px rgba(167,139,250,.12), var(--shadow);
+                background: rgba(255,255,255,.92);
             }
 
-        .tool-icon {
-            color: white;
-            font-family: serif;
-            font-size: 18px;
+        /* Kategori paneli */
+        .category-panel {
+            margin-top: 18px;
+            padding: 16px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            background: rgba(255,255,255,.70);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .category-title {
+            font-size: 12px;
+            font-weight: 950;
+            letter-spacing: .6px;
+            color: rgba(15,23,42,.78);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .category-title::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: linear-gradient(90deg, rgba(13,138,188,.18), rgba(167,139,250,.12), transparent);
+            }
+
+        .category-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 14px;
+        }
+
+        .cat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: rgba(15,23,42,.86);
+            padding: 10px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(15,23,42,.10);
+            background: rgba(255,255,255,.78);
+            box-shadow: 0 10px 18px rgba(15,23,42,.05);
+            transition: .18s;
             cursor: pointer;
-            font-style: italic;
+            user-select: none;
         }
 
-        .tool-icon-bold {
-            font-weight: bold;
-            font-style: normal;
-            font-family: sans-serif;
+            .cat-item:hover {
+                transform: translateY(-1px);
+                border-color: rgba(13,138,188,.18);
+                box-shadow: 0 16px 34px rgba(15,23,42,.08);
+            }
+
+            /* checkbox’u daha şık göster */
+            .cat-item input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                accent-color: var(--ocean);
+                cursor: pointer;
+            }
+
+        /* Hata kutusu */
+        .error-box {
+            margin: 12px 0 14px;
+            padding: 12px 14px;
+            border: 1px solid rgba(255,122,162,.35);
+            background: rgba(255,122,162,.10);
+            border-radius: 16px;
+            color: rgba(150,0,0,.90);
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 14px 28px rgba(255,122,162,.10);
         }
 
-        .tool-icon-header1 {
-            font-size: 20px;
-            font-weight: bold;
-            font-family: serif;
+        /* Responsive */
+        @@media (max-width: 900px) {
+            .editor-header {
+                max-width: 96%;
+                padding: 14px 14px;
+                border-radius: 18px;
+                top: 8px;
+            }
+
+            .editor-container {
+                max-width: 900px;
+                margin: 18px auto 60px;
+            }
+
+            .input-title {
+                font-size: 36px;
+            }
+
+            .input-story {
+                min-height: 320px;
+            }
         }
 
-        .tool-icon-header2 {
-            font-size: 16px;
-            font-weight: bold;
-            font-family: serif;
-        }
+       @@media (max-width: 520px) {
+            .header-actions {
+                gap: 10px;
+            }
 
-        /* Seçili metin vurgusu (Mavi) */
-        .highlight-text {
-            background-color: #cceeff; /* Hafif mavi seçim rengi */
-            padding: 2px 0;
-        }
+            .btn-publish {
+                padding: 9px 12px;
+            }
 
+            .icon-btn {
+                padding: 6px 8px;
+            }
+        }
     </style>
+
 </head>
 <body>
 
-    <header class="editor-header">
-        <div class="logo-area">
-            <a asp-controller="Home" asp-action="Index" class="logo">Novus</a>
-            <span class="draft-status">Draft in ZeynepSelimeKartal</span>
+    <form asp-controller="Home" asp-action="Publish" method="post">
+        @Html.AntiForgeryToken()
+
+        <header class="editor-header">
+            <div class="logo-area">
+                <a asp-controller="Home" asp-action="Index" class="logo">Novus</a>
+                <span class="draft-status">Draft</span>
+            </div>
+            <div class="header-actions">
+                <button type="submit" class="btn-publish">Publish</button>
+                <span class="icon-btn">•••</span>
+                <span class="icon-btn">🔔</span>
+                <div class="user-avatar">ZS</div>
+            </div>
+        </header>
+
+        <div class="editor-container">
+
+            @if (!string.IsNullOrWhiteSpace(err))
+            {
+                <div class="error-box">@err</div>
+            }
+
+            <input name="title" type="text" class="input-title" placeholder="Title" />
+
+            <textarea name="content" class="input-story" placeholder="Tell your story..."></textarea>
+
+            <!-- ✅ KATEGORİLER (DB’den) -->
+            <div class="category-panel">
+                <div class="category-title">Categories</div>
+
+                @if (categories.Count == 0)
+                {
+                    <div style="color:#757575; font-size:14px;">Kategori bulunamadı.</div>
+                }
+                else
+                {
+                    <div class="category-grid">
+                        @foreach (var c in categories)
+                        {
+                            <label class="cat-item">
+                                <input type="checkbox" name="categoryIds" value="@c.category_id" />
+                                <span>@c.category_name</span>
+                            </label>
+                        }
+                    </div>
+                }
+            </div>
+
         </div>
-        <div class="header-actions">
-            <button class="btn-publish">Publish</button>
-            <span class="icon-btn">•••</span>
-            <span class="icon-btn">🔔</span>
-            <div class="user-avatar">ZS</div>
-        </div>
-    </header>
-
-    <div class="editor-container">
-
-        <input type="text" class="input-title" placeholder="Title">
-
-        <div class="add-button-wrapper">
-            <div class="btn-circle-plus">+</div>
-        </div>
-
-        <textarea class="input-story" placeholder="Tell your story..."></textarea>
-    </div>
-
-    <div class="formatting-help-container">
-
-        <p>Select text to change formatting, add headers, or create links.</p>
-
-        <div class="toolbar-box">
-            <span class="tool-icon tool-icon-bold">B</span>
-            <span class="tool-icon">i</span>
-            <span class="tool-icon" style="font-style:normal; font-family:sans-serif;">🔗</span>
-            <span class="tool-icon tool-icon-header1">T</span>
-            <span class="tool-icon tool-icon-header2">T</span>
-            <span class="tool-icon" style="font-style:normal;">“</span>
-            <span style="width:1px; height:16px; background:#555;"></span> <span class="tool-icon" style="font-size:14px; font-style:normal;">🔒</span>
-        </div>
-
-        <div style="margin-top: 10px; font-family: serif; font-size: 24px;">
-            <span class="highlight-text">Writing on Novus</span>
-        </div>
-
-    </div>
+    </form>
 
 </body>
 </html>
+s

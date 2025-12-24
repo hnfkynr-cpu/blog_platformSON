@@ -1,3 +1,9 @@
+
+using Microsoft.EntityFrameworkCore;
+using İÇERİK_YÖNETİMİ_VE_BLOG_1.Models.Scaffold;
+
+
+
 namespace İÇERİK_YÖNETİMİ_VE_BLOG_1
 {
     public class Program
@@ -10,6 +16,9 @@ namespace İÇERİK_YÖNETİMİ_VE_BLOG_1
             builder.Services.AddControllersWithViews();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession();
+            builder.Services.AddDbContext<BlogPlatformDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
             var app = builder.Build();
 
